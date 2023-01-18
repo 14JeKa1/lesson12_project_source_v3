@@ -1,36 +1,20 @@
-from flask import Flask, request, render_template, send_from_directory
-# from functions import ...
+from flask import Flask, render_template
 
-POST_PATH = "posts.json"
-UPLOAD_FOLDER = "uploads/images"
+from main.views import main
+from loader.views import loader
 
 app = Flask(__name__)
 
-
-@app.route("/")
-def page_index():
-    pass
-
-
-@app.route("/list")
-def page_tag():
-    pass
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+app.register_blueprint(main)
+app.register_blueprint(loader)
 
 
-@app.route("/post", methods=["GET", "POST"])
-def page_post_form():
-    pass
+@app.errorhandler(404)
+def not_uploaded(error):
+    return render_template('404.html'), 404
 
 
-@app.route("/post", methods=["POST"])
-def page_post_upload():
-    pass
-
-
-@app.route("/uploads/<path:path>")
-def static_dir(path):
-    return send_from_directory("uploads", path)
-
-
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
 
